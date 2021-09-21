@@ -1,0 +1,32 @@
+version: "3.7"
+
+services:
+  mongodb:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - 27017:27017
+    networks:
+      - ZI-NET
+  web:
+    build: .
+    command:
+      - scraper.js
+    ports:
+      - 80:1508
+    depends_on:
+      - mongodb
+    volumes:
+      - .:/code
+    environment:
+      - DB_DIALECT=mongo
+      - PORT=1508
+      - DB_NAME=weather
+    networks:
+      - ZI-NET
+
+networks:
+    ZI-NET:
+        driver: bridge
